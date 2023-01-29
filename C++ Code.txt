@@ -1,0 +1,45 @@
+#pragma once
+
+#include "CoreMinimal.h"
+#include "Camera/PlayerCameraManager.h" 
+#include "(Class Name).generated.h" 
+
+/**
+*
+*/
+UCLASS()
+class (Project Name)_API A(Class Name) : public APlayerCameraManager
+{
+    GENERATED_BODY()
+     
+
+public:
+    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+        float PPWeight = 1.f;
+    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    FPostProcessSettings PPSettings;
+    virtual void ApplyCameraModifiers(float DeltaTime, FMinimalViewInfo& InOutPOV) override
+    {
+        Super::ApplyCameraModifiers(DeltaTime, InOutPOV);
+        if (PPWeight > 0.f)
+        {
+            AddCachedPPBlend(PPSettings, PPWeight);
+        }
+    }
+
+    UFUNCTION(BlueprintCallable)
+        void AddBlendable(const TScriptInterface<IBlendableInterface> InBlendableObject, const float InWeight = 1.f)
+    {
+        PPSettings.AddBlendable(InBlendableObject, InWeight);
+    }
+
+    UFUNCTION(BlueprintCallable)
+        void RemoveBlendable(const TScriptInterface<IBlendableInterface> InBlendableObject)
+    {
+        PPSettings.RemoveBlendable(InBlendableObject);
+    }
+};
+
+
+
+Note (don't Copy this): (Class Name) is the name of the class you created without brackets, (Project Name) is the name of your project all uppercast without spaces and brackets.
